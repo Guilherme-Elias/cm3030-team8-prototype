@@ -1,9 +1,7 @@
-﻿using System.Diagnostics;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.SceneManagement;
-using static System.Net.Mime.MediaTypeNames;
 
-public class SceneManager : MonoBehaviour
+public class SceneController : MonoBehaviour
 {
     public void PlayGame()
     {
