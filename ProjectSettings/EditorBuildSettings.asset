@@ -4,5 +4,17 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/WelcomeScreen.unity
+    guid: d76d0c675fd85e947a8bbc24111abb65
+  - enabled: 1
+    path: Assets/Scenes/FactionChooser.unity
+    guid: b077204e27364554abc28d9d62815a7c
+  - enabled: 1
+    path: Assets/Scenes/HowToPlay.unity
+    guid: 338b583fbd2110a4b83bf152412a9550
+  - enabled: 1
+    path: Assets/Scenes/Game.unity
+    guid: 6d9dc1b1fb2906247b2923aeb2d83e51
   m_configObjects: {}
