@@ -9,7 +9,7 @@ EditorBuildSettings:
     path: Assets/Scenes/WelcomeScreen.unity
     guid: d76d0c675fd85e947a8bbc24111abb65
   - enabled: 1
-    path: Assets/Scenes/FactionChooser.unity
+    path: Assets/Scenes/CharacterChooser.unity
     guid: b077204e27364554abc28d9d62815a7c
   - enabled: 1
     path: Assets/Scenes/HowToPlay.unity
