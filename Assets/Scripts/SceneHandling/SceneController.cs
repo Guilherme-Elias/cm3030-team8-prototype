@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Diagnostics;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class SceneController : MonoBehaviour
@@ -13,6 +14,12 @@ public class SceneController : MonoBehaviour
     {
         Debug.Log("Loading HowToPlay UI...");
         SceneManager.LoadScene("HowToPlay");
+    }
+
+    public void OpenCharacterChooser()
+    {
+        Debug.Log("Loading Character Chooser UI...");
+        SceneManager.LoadScene("CharacterChooser");
     }
 
     public void BackToMainMenu()
