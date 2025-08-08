@@ -3,23 +3,21 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class MenuSelection : MonoBehaviour
+public class MainMenuSelection : MonoBehaviour
 {
     public void StartGame()
     {
-        Debug.Log("A new game will start!");
-        // testing actually starting the game
         SceneManager.LoadScene("SampleScene");
     }
 
     public void OpenSettings()
     {
-        Debug.Log("Settings pannel will be opened.");
+        SceneManager.LoadScene("OptionsMenu");
     }
 
     public void ExitGame()
     {
-        Debug.Log("Seeya!");
+        Debug.Log("Seeya space cowboy...");
         Application.Quit(); // test
     }
 }
