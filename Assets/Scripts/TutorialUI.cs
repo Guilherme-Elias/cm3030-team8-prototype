@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class OptionsMenuSelection : MonoBehaviour
+public class TutorialUI : MonoBehaviour
 {
-    public void GoBack()
+    public void GoBackToMainMenu()
     {
-        Debug.Log("Back to the main menu!");
         SceneManager.LoadScene("MainMenu");
     }
 }
