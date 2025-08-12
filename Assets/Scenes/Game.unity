@@ -201,6 +201,25 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 1497871472}
   m_PrefabAsset: {fileID: 0}
+--- !u!95 &363117026
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 363117025}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 26503708436a40942adfa4b6ea63a1a6, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!4 &363117027 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6100777978372211071, guid: 858cdf4b25dc1a046b04c58176bcd398,
@@ -5878,22 +5897,22 @@ PrefabInstance:
     - target: {fileID: 6100777978372211071, guid: 858cdf4b25dc1a046b04c58176bcd398,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.70033276
+      value: 0.7071068
       objectReference: {fileID: 0}
     - target: {fileID: 6100777978372211071, guid: 858cdf4b25dc1a046b04c58176bcd398,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6100777978372211071, guid: 858cdf4b25dc1a046b04c58176bcd398,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.7138166
+      value: 0.7071068
       objectReference: {fileID: 0}
     - target: {fileID: 6100777978372211071, guid: 858cdf4b25dc1a046b04c58176bcd398,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6100777978372211071, guid: 858cdf4b25dc1a046b04c58176bcd398,
         type: 3}
@@ -5903,7 +5922,7 @@ PrefabInstance:
     - target: {fileID: 6100777978372211071, guid: 858cdf4b25dc1a046b04c58176bcd398,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 91.093
+      value: 90
       objectReference: {fileID: 0}
     - target: {fileID: 6100777978372211071, guid: 858cdf4b25dc1a046b04c58176bcd398,
         type: 3}
@@ -5927,8 +5946,23 @@ PrefabInstance:
       objectReference: {fileID: 635314974}
     - target: {fileID: 7537219829457991699, guid: 858cdf4b25dc1a046b04c58176bcd398,
         type: 3}
+      propertyPath: maxAmmo
+      value: 32
+      objectReference: {fileID: 0}
+    - target: {fileID: 7537219829457991699, guid: 858cdf4b25dc1a046b04c58176bcd398,
+        type: 3}
+      propertyPath: animator
+      value: 
+      objectReference: {fileID: 363117026}
+    - target: {fileID: 7537219829457991699, guid: 858cdf4b25dc1a046b04c58176bcd398,
+        type: 3}
       propertyPath: impactForce
       value: 102.9
+      objectReference: {fileID: 0}
+    - target: {fileID: 7537219829457991699, guid: 858cdf4b25dc1a046b04c58176bcd398,
+        type: 3}
+      propertyPath: realoadTime
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7537219829457991699, guid: 858cdf4b25dc1a046b04c58176bcd398,
         type: 3}
