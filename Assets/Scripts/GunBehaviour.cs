@@ -5,11 +5,17 @@ using UnityEngine;
 public class GunBehaviour : MonoBehaviour
 {
 
-    private PlayerAction playerAction;    
+    public float damage = 10f;
+    public float range = 100f;
+    public float impactForce = 10f;
+
+    public Camera camera;
     public GameObject holder;
     public GameObject gun;
-    public GameObject bulletPrefab;
-    private Vector3 bulletOffset = new Vector3(0f, 0f, 1f);
+    public ParticleSystem shootingFlash;
+    //public GameObject bulletImpactEffect;
+
+    private PlayerAction playerAction;    
 
     void Start()
     {
@@ -24,15 +30,34 @@ public class GunBehaviour : MonoBehaviour
 
     void OnHolderShoot()
     {
-        SpawnBullet();        
+        Shoot();
     }
 
-    void SpawnBullet()
+    private void Shoot()
     {
-        Vector3 spawnPosition = bulletOffset;
-        Quaternion spawnRotation = transform.rotation;
+        shootingFlash.Play();
 
-        GameObject bullet = Instantiate(bulletPrefab, spawnPosition, spawnRotation);
+        RaycastHit hitInfo;
+        if (Physics.Raycast(camera.transform.position, camera.transform.forward, out hitInfo, this.range))
+        {
+            TargetBehaviour target = hitInfo.transform.GetComponent<TargetBehaviour>();
+            
+            // applies damage if a target got hit
+            if (target != null)
+            {
+                target.TakeDamage(this.damage);
+            }
+
+            // applies a force to the target's body
+            if (hitInfo.rigidbody != null)
+            {
+                hitInfo.rigidbody.AddForce(-hitInfo.normal * this.impactForce);
+            }
+
+            // instantiate the impact effect on the hit point
+            //var go = Instantiate(bulletImpactEffect, hitInfo.point, Quaternion.LookRotation(hitInfo.normal));
+            //Destroy(go, 1);
+        }
     }
 
     void OnDestroy()
