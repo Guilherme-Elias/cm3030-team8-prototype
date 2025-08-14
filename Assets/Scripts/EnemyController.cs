@@ -1,48 +1,49 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.AI;
 
 public class EnemyController : MonoBehaviour
 {
+    public NavMeshAgent agent;
+    public Transform target;
+    
     public float lookRadius = 5f;
-    Transform target;
-    NavMeshAgent agent;
-    private float rotationSmoothness = 3f;
-
-    private void Start()
-    {
-        target = PlayerManager.instance.player.transform;
-        agent = GetComponent<NavMeshAgent>();
-    }
+    public float rotationSmoothness = 3f;
 
     private void Update()
     {
-        float distanceToPlayer = Vector3.Distance(transform.position, target.position);
+        if (target == null)
+        {
+            return; // when the target is destroyed by the player
+        }
+
+        Vector3 agentPosition = agent.transform.position;
+        Vector3 targetPosition = target.position;
+
+        float distanceToPlayer = Vector3.Distance(agentPosition, targetPosition);
 
         if (distanceToPlayer <= lookRadius)
         {
-            agent.SetDestination(target.position);
+            agent.SetDestination(targetPosition);
 
             if (distanceToPlayer <= agent.stoppingDistance)
-            {
-                // face the player
-                FaceTarget();
-                // attack the player
+            {                
+                FaceTarget(agent, target);
                 AttackTarget();
             }
         }
     }
 
-    void FaceTarget()
+    void FaceTarget(NavMeshAgent agent, Transform target)
     {
-        Vector3 direction = (target.position - transform.position).normalized;
-        Quaternion lookRotation = Quaternion.LookRotation(
-            new Vector3(direction.x, 0, direction.z));
+        Vector3 agentPosition = agent.transform.position;
+        Vector3 targetPosition = target.position;
+        Quaternion agentRotation = agent.transform.rotation;
+
+        Vector3 direction = (targetPosition - agentPosition).normalized;
+        Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
 
         // smoothing the rotation to the target
-        transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, 
-            Time.deltaTime * this.rotationSmoothness);
+        transform.rotation = Quaternion.Slerp(agentRotation, lookRotation, Time.deltaTime * this.rotationSmoothness);
     }
 
     void AttackTarget()
@@ -50,9 +51,10 @@ public class EnemyController : MonoBehaviour
         return;
     }
 
+    // just for debugging purposes
     void OnDrawGizmosSelected()
     {
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, lookRadius);
+        Gizmos.color = Color.green;
+        Gizmos.DrawWireSphere(agent.transform.position, lookRadius);
     }
 }

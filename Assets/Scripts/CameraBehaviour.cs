@@ -1,40 +1,49 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class CameraBehaviour : MonoBehaviour
 {
-    private Vector3 cameraOffset = new Vector3(0f, 0.5f, 0f);
-    private GameObject targetToFollow;
-    private Camera mainCamera;
+    public GameObject targetToFollow;
+    public Camera mainCamera;
 
-    public float mouseSensitivity = 5f;
-    private float verticalRotation = 0f;
+    public float horizontalMouseSensitivity = 5f;
+    public float verticalMouseSensitivity = 5f;
+    public float fieldOfView = 90f;
+
+    private float yaw; // horizontal rotation (left/right)
+    private float pitch; // vertical rotation (up/down)
+    private Vector3 cameraOffset;
 
     void Start()
     {
-        targetToFollow = GameObject.Find("Player");
+        // initializing private attributes
+        this.yaw = 0f;
+        this.pitch = 0f;
+        this.cameraOffset = new Vector3(0f, 0.5f, 0f);
 
-        mainCamera = GetComponent<Camera>();
-        mainCamera.fieldOfView = 90f;
+        // setting camera FOV
+        mainCamera.fieldOfView = fieldOfView;
+
+        // locking and hiding the cursor 
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
     }
 
     void LateUpdate()
     {
-        // Update vertical rotation from mouse Y movement
-        float mouseY = Input.GetAxis("Mouse Y");
-        verticalRotation -= mouseY * mouseSensitivity;
+        // Get mouse input
+        float mouseX = Input.GetAxis("Mouse X") * horizontalMouseSensitivity;
+        float mouseY = Input.GetAxis("Mouse Y") * verticalMouseSensitivity;
 
-        // Clamp vertical rotation to avoid flipping
-        verticalRotation = Mathf.Clamp(verticalRotation, -80f, 80f);
+        // Update yaw and pitch
+        this.yaw += mouseX;
+        this.pitch -= mouseY;
 
-        // Position camera relative to player
-        this.transform.position = targetToFollow.transform.TransformPoint(cameraOffset);
+        // Clamp pitch to avoid flipping
+        this.pitch = Mathf.Clamp(this.pitch, -80f, 80f);
 
-        // Apply rotation: first vertical (X axis), then horizontal (Y axis from player)
-        Vector3 targetEulerAngles = targetToFollow.transform.eulerAngles;
-        this.transform.rotation = Quaternion.Euler(verticalRotation, targetEulerAngles.y, 0f);
-
+        // Position and Rotate Camera
+        mainCamera.transform.SetPositionAndRotation(
+            targetToFollow.transform.position + cameraOffset, Quaternion.Euler(this.pitch, this.yaw, 0f));
     }
 }
     

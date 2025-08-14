@@ -62,7 +62,7 @@ public class GunBehaviour : MonoBehaviour
         RaycastHit hitInfo;
         if (Physics.Raycast(camera.transform.position, camera.transform.forward, out hitInfo, this.range))
         {
-            TargetBehaviour target = hitInfo.transform.GetComponent<TargetBehaviour>();
+            BulletTargetBehaviour target = hitInfo.transform.GetComponent<BulletTargetBehaviour>();
             
             // applies damage if a target got hit
             if (target != null)

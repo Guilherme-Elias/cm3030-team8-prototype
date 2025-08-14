@@ -1,73 +1,68 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
+    public Camera mainCamera; // player follows main camera's Y axis rotation
+    public Rigidbody player;
+
     public float movementSpeed = 5f;
     public float rotationSpeed = 5f;
     public float jumpForceMagnitude = 5f;
     public float mouseSensitivity = 5f;
 
-    private Rigidbody playerRigidBody;
-
     void Start()
     {
-        playerRigidBody = GetComponent<Rigidbody>();
-
-        // player won't rotate along any horizontal axis
-        playerRigidBody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
-
-        Cursor.visible = false;
+        // player won't rotate by itself
+        player.constraints = RigidbodyConstraints.FreezeRotationX |
+            RigidbodyConstraints.FreezeRotationZ;
     }
 
     void Update()
     {
-        this.handlePlayerRotation();
-        this.handlePlayerJump();
+        this.HandlePlayerRotation();
+        this.HandlePlayerJump();
     }
 
     void FixedUpdate()
     {
-        this.handlePlayerMovement();
+        this.HandlePlayerMovement();
     }
 
-    private void handlePlayerMovement()
+    private void HandlePlayerMovement()
     {
         Vector3 movementDirectionVector = Vector3.zero;
 
         if (Input.GetKey(KeyCode.W))
-            movementDirectionVector += this.transform.forward;
+            movementDirectionVector += player.transform.forward;
 
         if (Input.GetKey(KeyCode.A))
-            movementDirectionVector += -this.transform.right;
+            movementDirectionVector += -player.transform.right;
 
         if (Input.GetKey(KeyCode.S))
-            movementDirectionVector += -this.transform.forward;
+            movementDirectionVector += -player.transform.forward;
 
         if (Input.GetKey(KeyCode.D))
-            movementDirectionVector += this.transform.right;
+            movementDirectionVector += player.transform.right;
 
-        movementDirectionVector = movementDirectionVector.normalized * Time.fixedDeltaTime * movementSpeed;
-        playerRigidBody.MovePosition(playerRigidBody.position + movementDirectionVector);
+        movementDirectionVector = movementSpeed * Time.fixedDeltaTime * movementDirectionVector.normalized;
+        player.MovePosition(player.position + movementDirectionVector);
     }
 
-    private void handlePlayerJump()
+    private void HandlePlayerJump()
     {
-        if(Input.GetKeyDown(KeyCode.Space) && this.isAtTheGround())
+        if(Input.GetKeyDown(KeyCode.Space) && this.IsAtTheGround())
         {
-            playerRigidBody.AddForce(Vector3.up * jumpForceMagnitude, ForceMode.VelocityChange);
+            player.AddForce(Vector3.up * jumpForceMagnitude, ForceMode.VelocityChange);
         }
     }
 
-    private void handlePlayerRotation()
+    private void HandlePlayerRotation()
     {
-        float mouseX = Input.GetAxis("Mouse X");
-        transform.Rotate(mouseSensitivity * mouseX * Vector3.up); // rotation through Y axis
+        float cameraYaw = mainCamera.transform.eulerAngles.y;
+        player.rotation = Quaternion.Euler(0f, cameraYaw, 0f);
     }
 
-    private bool isAtTheGround()
+    private bool IsAtTheGround()
     {
         return Physics.Raycast(transform.position, Vector3.down, 1.1f);
     }

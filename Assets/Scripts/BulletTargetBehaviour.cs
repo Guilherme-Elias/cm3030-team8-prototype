@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class TargetBehaviour : MonoBehaviour
+public class BulletTargetBehaviour : MonoBehaviour
 {
     public float health = 50f;
     
