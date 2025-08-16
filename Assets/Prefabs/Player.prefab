@@ -12,9 +12,7 @@ GameObject:
   - component: {fileID: 5353856544244591759}
   - component: {fileID: 5353856544244591758}
   - component: {fileID: 5353856544244591757}
-  - component: {fileID: 5353856544244591756}
   - component: {fileID: 5353856544244591755}
-  - component: {fileID: 6721501078954929410}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -97,22 +95,6 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &5353856544244591756
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5353856544244591754}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 156bd97c5ac60a741a6bfb91c755269b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  movementSpeed: 5
-  rotationSpeed: 5
-  jumpForceMagnitude: 5
-  mouseSensitivity: 10
 --- !u!54 &5353856544244591755
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -129,15 +111,3 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 1
---- !u!114 &6721501078954929410
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5353856544244591754}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e61c5e49d62c6a34fb2d334d07bac2ec, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 

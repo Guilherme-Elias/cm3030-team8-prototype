@@ -1,18 +1,36 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerAction : MonoBehaviour
 {
+    private GunController gunController;
 
-    public event Action shoot;
+    void Start()
+    {
+        gunController = FindObjectOfType<GunController>(); // in GunManager 
+    }
 
     void Update()
     {
-        if (Input.GetKey(KeyCode.Mouse0))
+
+        if (Input.GetKeyDown(KeyCode.Mouse0))
         {
-            shoot?.Invoke();
+            this.Shoot();
         }
+
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            this.Reload();
+        }
+    }
+
+    private void Shoot()
+    {
+        gunController.Shoot();
+    }
+
+    private void Reload()
+    {
+        gunController.Reload();
     }
 }
