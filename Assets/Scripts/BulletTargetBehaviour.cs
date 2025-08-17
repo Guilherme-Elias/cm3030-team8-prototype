@@ -10,6 +10,7 @@ public class BulletTargetBehaviour : MonoBehaviour
     private void Start()
     {
         if (enemies.Length == 0) throw new EmptyEnemiesException("No enemies were passed!");
+        if (this.AnyWithWrongTag(enemies)) throw new WrongEnemyTag("All enemies must have the 'Enemy' Tag!");
 
         float initialHealth = 50f;
         foreach (var enemy in enemies)
@@ -56,6 +57,15 @@ public class BulletTargetBehaviour : MonoBehaviour
         this.healthMap[enemy] = futureHealth;
     }
 
+    private bool AnyWithWrongTag(GameObject[] enemies)
+    {
+        foreach (var enemy in enemies)
+        {
+            if (!enemy.CompareTag("Enemy")) return true;
+        }
+        return false;
+    }
+
     public class EmptyEnemiesException : Exception
     {
         public EmptyEnemiesException(){ }
@@ -68,4 +78,9 @@ public class BulletTargetBehaviour : MonoBehaviour
         public EnemyDoesNotExist(string message) : base(message) { }
     }
 
+    public class WrongEnemyTag : Exception 
+    {
+        public WrongEnemyTag() { }
+        public WrongEnemyTag(string message) : base(message) { }
+    }
 }

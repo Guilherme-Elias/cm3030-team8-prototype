@@ -110,14 +110,21 @@ public class GunController : MonoBehaviour
     private void CastShootRay()
     {
         RaycastHit hitInfo;
+        
         float shootingRange = 100f;
         float impact = 10f;
-        bool hitAnEnemy = Physics.Raycast(mainCamera.transform.position, mainCamera.transform.forward, out hitInfo, shootingRange);
-        if (hitAnEnemy)
+        bool hitSomething = Physics.Raycast(mainCamera.transform.position, mainCamera.transform.forward, out hitInfo, shootingRange);
+
+        if (hitSomething)
         {
-            if (hitInfo.rigidbody != null)
-                bulletTarget.ApplyForce(hitInfo.rigidbody, -hitInfo.normal * impact);
-            bulletTarget.TakeDamage(10f, hitInfo.collider.gameObject);
+            if (hitInfo.collider.CompareTag("Enemy")) // enemy logic
+            {
+                if (hitInfo.rigidbody != null)
+                    bulletTarget.ApplyForce(hitInfo.rigidbody, -hitInfo.normal * impact);
+                bulletTarget.TakeDamage(10f, hitInfo.collider.gameObject);
+            }
+
+
         }
     }
 

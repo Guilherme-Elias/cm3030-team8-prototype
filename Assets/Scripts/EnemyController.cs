@@ -1,15 +1,29 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.AI;
 
 public class EnemyController : MonoBehaviour
 {
-    public NavMeshAgent agent;
+    public NavMeshAgent[] agents;
     public Transform target;
     
     public float lookRadius = 5f;
     public float rotationSmoothness = 3f;
 
+    private void Start()
+    {
+        if (agents.Length == 0) throw new EmptyAgentsException("No agents were found!");
+    }
+
     private void Update()
+    {
+        foreach (var agent in agents)
+        {
+            this.FollowTargetLogic(agent, target);  
+        }
+    }
+
+    private void FollowTargetLogic(NavMeshAgent agent, Transform target)
     {
         if (agent == null)
         {
@@ -26,7 +40,7 @@ public class EnemyController : MonoBehaviour
             agent.SetDestination(targetPosition);
 
             if (distanceToPlayer <= agent.stoppingDistance)
-            {                
+            {
                 FaceTarget(agent, target);
                 AttackTarget();
             }
@@ -54,7 +68,16 @@ public class EnemyController : MonoBehaviour
     // just for debugging purposes
     void OnDrawGizmosSelected()
     {
-        Gizmos.color = Color.green;
-        Gizmos.DrawWireSphere(agent.transform.position, lookRadius);
+        foreach (var agent in agents)
+        {
+            Gizmos.color = Color.green;
+            Gizmos.DrawWireSphere(agent.transform.position, lookRadius);
+        }
+    }
+
+    public class EmptyAgentsException : Exception
+    {
+        public EmptyAgentsException() { }
+        public EmptyAgentsException(string message) : base(message) { }
     }
 }
