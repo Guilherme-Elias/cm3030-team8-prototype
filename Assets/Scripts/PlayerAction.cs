@@ -51,6 +51,8 @@ public class PlayerAction : MonoBehaviour
 
     public void TakeDamage(float amount)
     {
+        // todo: add damage sound
+
         float futureHealth = this.currentHealth - amount;
         if (futureHealth <= 0)
         {
@@ -63,6 +65,7 @@ public class PlayerAction : MonoBehaviour
     public void Die()
     {
         // todo: endgame logic
+        // todo: add death sound
         Debug.Log("You have died!");
         
     }

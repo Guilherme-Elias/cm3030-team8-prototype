@@ -6,9 +6,14 @@ public class EnemyController : MonoBehaviour
 {
     public NavMeshAgent[] agents;
     public Transform target;
+    public PlayerAction playerActions;
     
-    public float lookRadius = 5f;
-    public float rotationSmoothness = 3f;
+    private float lookRadius = 5f;
+    private float rotationSmoothness = 3f;
+    private float attackPower = 10f;
+    private float attackRange = 2f;
+    private float attackCooldown = 2f;
+    private float lastAttackTime = -Mathf.Infinity;
 
     private void Start()
     {
@@ -38,10 +43,10 @@ public class EnemyController : MonoBehaviour
         if (distanceToPlayer <= lookRadius)
         {
             agent.SetDestination(targetPosition);
+            FaceTarget(agent, target);
 
-            if (distanceToPlayer <= agent.stoppingDistance)
+            if (TargetIsInAttackRange(distanceToPlayer) && IsTimeToAttack())
             {
-                FaceTarget(agent, target);
                 AttackTarget();
             }
         }
@@ -62,7 +67,23 @@ public class EnemyController : MonoBehaviour
 
     void AttackTarget()
     {
+        playerActions.TakeDamage(this.attackPower);
+        this.lastAttackTime = Time.time; // reset cooldown
         return;
+    }
+
+    private bool TargetIsInAttackRange(float distanceToTarget)
+    {
+        if (distanceToTarget <= this.attackRange)
+            return true;
+        return false;
+    }
+
+    private bool IsTimeToAttack()
+    {
+        if (Time.time >= this.lastAttackTime + this.attackCooldown)
+            return true;
+        return false;
     }
 
     // just for debugging purposes
