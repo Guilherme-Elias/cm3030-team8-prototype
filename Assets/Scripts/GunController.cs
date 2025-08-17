@@ -6,52 +6,75 @@ public class GunController : MonoBehaviour
     public Transform gunHolderTransform;
     public Transform gunTransform;
     public Animator gunAnimator;
+    public Camera mainCamera;
 
     public AudioSource shootAudioSouce;
     public AudioSource reloadAudioSouce;
 
     public ParticleSystem muzzleFlash;
 
+    public BulletTargetBehaviour bulletTarget;
+
     private Vector3 gunOffset = new Vector3(.35f, .35f, .2f);
 
+    private const int MAX_AMMO = 32;
+    private int currentAmmo = 0;
+
+    private bool reloading = false;
+
     private void Start()
-    {         
+    {
+        // TODO: handle GUN ROTATION ON X and Z axis (gun must follow the camera)
         AttachGunToHolder(gunTransform, gunHolderTransform);
+        LoadAmmo();
     }
 
-    private void AttachGunToHolder(Transform gun, Transform holder)
-    {
-        gun.SetParent(holder, false);
-        gun.position = holder.position + this.gunOffset;
-        gun.rotation = holder.rotation;
-    }
+    /**
+     * MAIN CALLBACKS
+     */
 
     public void Shoot()
     {
-        // play shoot animation
+        if (this.reloading) return;
+        if (this.currentAmmo == 0) return;
+
         StartCoroutine(ShootAnimation());
-
-        // play shooting sound
         shootAudioSouce.Play();
-
-        // TODO: play muzzle flash
         muzzleFlash.Play();
 
         // TODO: cast a ray to deal with enemy logic
-        
+        this.ShootLogic();
     }
 
     public void Reload()
     {
-        // play reload animation
-        StartCoroutine(ReloadAnimation());
+        if (this.reloading) return;
+        if (this.currentAmmo == MAX_AMMO) return;
 
-        // play reload sound
+        StartCoroutine(ReloadAnimation());
         reloadAudioSouce.Play();
-        
-        // reload the gun logic
+        this.ReloadLogic();
     }
 
+    /**
+     * SHOOTING AND RELOADING LOGIC RELATED METHODS
+     */
+
+    private void ShootLogic()
+    {
+        this.CastShootRay();
+        this.WasteAmmo();
+    }
+
+    private void ReloadLogic()
+    {
+        this.reloading = true;
+        this.LoadAmmo();
+    }
+
+    /**
+     * ANIMATION RELATED METHODS
+     */
 
     private IEnumerator ShootAnimation() 
     {
@@ -66,5 +89,42 @@ public class GunController : MonoBehaviour
         gunAnimator.SetBool("Reloading", true);
         yield return new WaitForSeconds(0.3f);
         gunAnimator.SetBool("Reloading", false);
+    }
+
+    /**
+     * AUXILIAR PRIVATE METHODS
+     */
+
+    private void LoadAmmo()
+    {
+        this.currentAmmo = MAX_AMMO;
+        this.reloading = false;
+    }
+
+    private void WasteAmmo()
+    {
+        if (this.currentAmmo == 0) return;
+        this.currentAmmo--;
+    }
+
+    private void CastShootRay()
+    {
+        RaycastHit hitInfo;
+        float shootingRange = 100f;
+        float impact = 10f;
+        bool hitAnEnemy = Physics.Raycast(mainCamera.transform.position, mainCamera.transform.forward, out hitInfo, shootingRange);
+        if (hitAnEnemy)
+        {
+            if (hitInfo.rigidbody != null)
+                bulletTarget.ApplyForce(hitInfo.rigidbody, -hitInfo.normal * impact);
+            bulletTarget.TakeDamage(10f, hitInfo.collider.gameObject);
+        }
+    }
+
+    private void AttachGunToHolder(Transform gun, Transform holder)
+    {
+        gun.SetParent(holder, false);
+        gun.position = holder.position + this.gunOffset;
+        gun.rotation = holder.rotation;
     }
 }

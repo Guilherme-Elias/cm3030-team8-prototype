@@ -11,9 +11,9 @@ public class EnemyController : MonoBehaviour
 
     private void Update()
     {
-        if (target == null)
+        if (agent == null)
         {
-            return; // when the target is destroyed by the player
+            return; // when the agent is destroyed by the player
         }
 
         Vector3 agentPosition = agent.transform.position;
