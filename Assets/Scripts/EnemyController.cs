@@ -14,13 +14,7 @@ public class EnemyController : MonoBehaviour
     private float attackCooldown = 2f;
     private float lastAttackTime = -Mathf.Infinity;
 
-    // todo: won't be passed from Inspector anymore
     private NavMeshAgent[] agents;
-
-    //private void Start()
-    //{
-    //    if (agents.Length == 0) throw new EmptyAgentsException("No agents were found!");
-    //}
 
     private void Update()
     {
@@ -94,16 +88,6 @@ public class EnemyController : MonoBehaviour
             return true;
         return false;
     }
-
-    // just for debugging purposes [remove this]
-    //void OnDrawGizmosSelected()
-    //{
-    //    foreach (var agent in agents)
-    //    {
-    //        Gizmos.color = Color.green;
-    //        Gizmos.DrawWireSphere(agent.transform.position, lookRadius);
-    //    }
-    //}
 
     public class EmptyAgentsException : Exception
     {

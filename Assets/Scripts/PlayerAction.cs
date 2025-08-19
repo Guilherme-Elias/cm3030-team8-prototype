@@ -1,9 +1,12 @@
 ﻿using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class PlayerAction : MonoBehaviour
 {
+    public HealthBar healthBar;
+
     private GunController gunController;
     private const float MAX_HEALTH = 100;
     private float currentHealth = 0;
@@ -11,6 +14,7 @@ public class PlayerAction : MonoBehaviour
     void Start()
     {
         RestoreHealth(MAX_HEALTH);
+        this.healthBar.SetMaxHealth(MAX_HEALTH);
         gunController = FindObjectOfType<GunController>(); // in GunManager 
     }
 
@@ -47,6 +51,7 @@ public class PlayerAction : MonoBehaviour
             return;
         }            
         this.currentHealth = futureHealth;
+        this.healthBar.SetHealth(this.currentHealth);
     }
 
     public void TakeDamage(float amount)
@@ -60,6 +65,7 @@ public class PlayerAction : MonoBehaviour
         }
 
         this.currentHealth = futureHealth;
+        this.healthBar.SetHealth(this.currentHealth);
     }
 
     public void Die()

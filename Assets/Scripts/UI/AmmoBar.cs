@@ -7,13 +7,13 @@ public class AmmoBar : MonoBehaviour
 {
     public Slider slider;
 
-    public void SetMaxAmmo(int maxAmmo)
+    public void SetMaxAmmo(float maxAmmo)
     {
         slider.maxValue = maxAmmo;
         slider.value = maxAmmo;
     }
 
-    public void SetAmmo(int ammo)
+    public void SetAmmo(float ammo)
     {
         slider.value = ammo;
     }

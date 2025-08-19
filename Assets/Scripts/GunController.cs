@@ -8,6 +8,8 @@ public class GunController : MonoBehaviour
     public Animator gunAnimator;
     public Camera mainCamera;
 
+    public AmmoBar ammoBar;
+
     public AudioSource shootAudioSouce;
     public AudioSource reloadAudioSouce;
 
@@ -43,7 +45,6 @@ public class GunController : MonoBehaviour
         shootAudioSouce.Play();
         muzzleFlash.Play();
 
-        // TODO: cast a ray to deal with enemy logic
         this.ShootLogic();
     }
 
@@ -99,6 +100,7 @@ public class GunController : MonoBehaviour
     private void LoadAmmo()
     {
         this.currentAmmo = MAX_AMMO;
+        this.ammoBar.SetAmmo(this.currentAmmo);
         this.reloading = false;
     }
 
@@ -106,6 +108,7 @@ public class GunController : MonoBehaviour
     {
         if (this.currentAmmo == 0) return;
         this.currentAmmo--;
+        this.ammoBar.SetAmmo(this.currentAmmo);
     }
 
     private void CastShootRay()
