@@ -15,6 +15,7 @@ public class GunController : MonoBehaviour
 
     public BulletTargetBehaviour bulletTarget;
 
+    public float shootingRange = 20f;
     private Vector3 gunOffset = new Vector3(.35f, .35f, .2f);
 
     private const int MAX_AMMO = 32;
@@ -111,9 +112,8 @@ public class GunController : MonoBehaviour
     {
         RaycastHit hitInfo;
         
-        float shootingRange = 100f;
         float impact = 10f;
-        bool hitSomething = Physics.Raycast(mainCamera.transform.position, mainCamera.transform.forward, out hitInfo, shootingRange);
+        bool hitSomething = Physics.Raycast(mainCamera.transform.position, mainCamera.transform.forward, out hitInfo, this.shootingRange);
 
         if (hitSomething)
         {

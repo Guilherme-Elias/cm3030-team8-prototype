@@ -4,20 +4,18 @@ using UnityEngine;
 
 public class BulletTargetBehaviour : MonoBehaviour
 {
-    public GameObject[] enemies; // must be passed in the Inspector
+    private GameObject[] enemies;
     private Dictionary<GameObject, float> healthMap = new Dictionary<GameObject, float>();
 
-    private void Start()
-    {
-        if (enemies.Length == 0) throw new EmptyEnemiesException("No enemies were passed!");
-        if (this.AnyWithWrongTag(enemies)) throw new WrongEnemyTag("All enemies must have the 'Enemy' Tag!");
+    //private void Start()
+    //{
+    //    SetEnemies(enemies);
+    //    PopulateHealthMap(enemies);
+    //}
 
-        float initialHealth = 50f;
-        foreach (var enemy in enemies)
-        {
-            healthMap.Add(enemy, initialHealth);
-        }
-    }
+    /**
+     * CLASS INTERFACE
+     */
 
     public void TakeDamage(float amount, GameObject target)
     {
@@ -28,6 +26,34 @@ public class BulletTargetBehaviour : MonoBehaviour
     public void ApplyForce(Rigidbody target, Vector3 magnitude)
     {
         target.AddForce(magnitude);
+    }
+
+    /**
+     * SETTERS
+     */
+
+    public void SetEnemies(GameObject[] enemies) // see EnemySpawner
+    {
+        if (enemies.Length == 0) throw new EmptyEnemiesException("No enemies were passed!");
+        if (this.AnyWithWrongTag(enemies)) throw new WrongEnemyTag("All enemies must have the 'Enemy' Tag!");
+        this.enemies = enemies;
+        this.PopulateHealthMap(enemies);
+        Debug.Log("Health Map: ");
+        Debug.Log(this.healthMap);
+    }
+
+    /**
+     * PRIVATE UTILITIES
+     */
+
+    private void PopulateHealthMap(GameObject[] enemies)
+    {
+        float initialHealth = 50f;
+        foreach (var enemy in enemies)
+        {
+            if (!healthMap.ContainsKey(enemy))
+                healthMap.Add(enemy, initialHealth);
+        }
     }
 
     private void Die(GameObject deadEnemy)
@@ -65,6 +91,10 @@ public class BulletTargetBehaviour : MonoBehaviour
         }
         return false;
     }
+
+    /**
+     * EXCEPTIONS USED IN THIS CLASS
+     */
 
     public class EmptyEnemiesException : Exception
     {

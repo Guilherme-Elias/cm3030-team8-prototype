@@ -4,28 +4,37 @@ using UnityEngine.AI;
 
 public class EnemyController : MonoBehaviour
 {
-    public NavMeshAgent[] agents;
     public Transform target;
     public PlayerAction playerActions;
     
-    private float lookRadius = 5f;
+    public float lookRadius = 5f;
     private float rotationSmoothness = 3f;
     private float attackPower = 10f;
     private float attackRange = 2f;
     private float attackCooldown = 2f;
     private float lastAttackTime = -Mathf.Infinity;
 
-    private void Start()
-    {
-        if (agents.Length == 0) throw new EmptyAgentsException("No agents were found!");
-    }
+    // todo: won't be passed from Inspector anymore
+    private NavMeshAgent[] agents;
+
+    //private void Start()
+    //{
+    //    if (agents.Length == 0) throw new EmptyAgentsException("No agents were found!");
+    //}
 
     private void Update()
     {
+        if (this.agents == null) return;
         foreach (var agent in agents)
         {
             this.FollowTargetLogic(agent, target);  
         }
+    }
+
+    public void SetAgents(NavMeshAgent[] agents)
+    {
+        if (agents.Length == 0) throw new EmptyAgentsException("No agents were found!");
+        this.agents = agents;
     }
 
     private void FollowTargetLogic(NavMeshAgent agent, Transform target)
@@ -43,16 +52,16 @@ public class EnemyController : MonoBehaviour
         if (distanceToPlayer <= lookRadius)
         {
             agent.SetDestination(targetPosition);
-            FaceTarget(agent, target);
+            this.FaceTarget(agent, target);
 
             if (TargetIsInAttackRange(distanceToPlayer) && IsTimeToAttack())
             {
-                AttackTarget();
+                this.AttackTarget();
             }
         }
     }
 
-    void FaceTarget(NavMeshAgent agent, Transform target)
+    private void FaceTarget(NavMeshAgent agent, Transform target)
     {
         Vector3 agentPosition = agent.transform.position;
         Vector3 targetPosition = target.position;
@@ -65,7 +74,7 @@ public class EnemyController : MonoBehaviour
         transform.rotation = Quaternion.Slerp(agentRotation, lookRotation, Time.deltaTime * this.rotationSmoothness);
     }
 
-    void AttackTarget()
+    private void AttackTarget()
     {
         playerActions.TakeDamage(this.attackPower);
         this.lastAttackTime = Time.time; // reset cooldown
@@ -86,15 +95,15 @@ public class EnemyController : MonoBehaviour
         return false;
     }
 
-    // just for debugging purposes
-    void OnDrawGizmosSelected()
-    {
-        foreach (var agent in agents)
-        {
-            Gizmos.color = Color.green;
-            Gizmos.DrawWireSphere(agent.transform.position, lookRadius);
-        }
-    }
+    // just for debugging purposes [remove this]
+    //void OnDrawGizmosSelected()
+    //{
+    //    foreach (var agent in agents)
+    //    {
+    //        Gizmos.color = Color.green;
+    //        Gizmos.DrawWireSphere(agent.transform.position, lookRadius);
+    //    }
+    //}
 
     public class EmptyAgentsException : Exception
     {
