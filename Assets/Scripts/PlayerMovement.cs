@@ -7,7 +7,7 @@ public class PlayerMovement : MonoBehaviour
 
     public float movementSpeed = 5f;
     public float rotationSpeed = 5f;
-    public float jumpForceMagnitude = 5f;
+    private float jumpForceMagnitude = 5f;
     public float mouseSensitivity = 5f;
 
     void Start()
@@ -20,7 +20,7 @@ public class PlayerMovement : MonoBehaviour
     void Update()
     {
         this.HandlePlayerRotation();
-        this.HandlePlayerJump();
+        this.HandlePlayerJump();            
     }
 
     void FixedUpdate()
@@ -50,10 +50,12 @@ public class PlayerMovement : MonoBehaviour
 
     private void HandlePlayerJump()
     {
-        if(Input.GetKeyDown(KeyCode.Space) && this.IsAtTheGround())
+
+        if(Input.GetKeyDown(KeyCode.Space) && IsAtTheGround())
         {
             player.AddForce(Vector3.up * jumpForceMagnitude, ForceMode.VelocityChange);
         }
+
     }
 
     private void HandlePlayerRotation()
@@ -64,6 +66,7 @@ public class PlayerMovement : MonoBehaviour
 
     private bool IsAtTheGround()
     {
-        return Physics.Raycast(transform.position, Vector3.down, 1.1f);
+        bool grounded = Physics.Raycast(player.transform.position, Vector3.down, 1.1f);
+        return grounded;
     }
 }

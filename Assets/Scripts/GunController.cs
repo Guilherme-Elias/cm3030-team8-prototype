@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+//using System.Numerics;
 using UnityEngine;
 
 public class GunController : MonoBehaviour
@@ -27,7 +28,6 @@ public class GunController : MonoBehaviour
 
     private void Start()
     {
-        // TODO: handle GUN ROTATION ON X and Z axis (gun must follow the camera)
         AttachGunToHolder(gunTransform, gunHolderTransform);
         LoadAmmo();
     }
@@ -120,7 +120,7 @@ public class GunController : MonoBehaviour
 
         if (hitSomething)
         {
-            if (hitInfo.collider.CompareTag("Enemy")) // enemy logic
+            if (hitInfo.collider.CompareTag("Enemy")) // enemy hit logic
             {
                 if (hitInfo.rigidbody != null)
                     bulletTarget.ApplyForce(hitInfo.rigidbody, -hitInfo.normal * impact);
@@ -135,6 +135,6 @@ public class GunController : MonoBehaviour
     {
         gun.SetParent(holder, false);
         gun.position = holder.position + this.gunOffset;
-        gun.rotation = holder.rotation;
+        //gun.rotation = holder.rotation;
     }
 }

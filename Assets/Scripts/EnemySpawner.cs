@@ -39,7 +39,6 @@ public class EnemySpawner : MonoBehaviour
         for (int i = 0; i < toSpawn; i++)
         {
             this.SpawnNewEnemy();
-            Debug.Log("Enemy " + i + " spawned!");
         }
 
         this.UpdateEnemyController();
@@ -78,7 +77,6 @@ public class EnemySpawner : MonoBehaviour
 
     private void UpdateBulletTargetBehaviour()
     {
-        //bulletTargetBehaviour.SetEnemies(this.spawnedEnemies.ToArray());
         bulletTargetBehaviour.SetEnemies(this.spawnedEnemies.FindAll(e => e != null).ToArray());
     }
 

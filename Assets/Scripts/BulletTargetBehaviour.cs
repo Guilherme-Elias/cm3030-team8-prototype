@@ -7,12 +7,6 @@ public class BulletTargetBehaviour : MonoBehaviour
     private GameObject[] enemies;
     private Dictionary<GameObject, float> healthMap = new Dictionary<GameObject, float>();
 
-    //private void Start()
-    //{
-    //    SetEnemies(enemies);
-    //    PopulateHealthMap(enemies);
-    //}
-
     /**
      * CLASS INTERFACE
      */
@@ -38,8 +32,6 @@ public class BulletTargetBehaviour : MonoBehaviour
         if (this.AnyWithWrongTag(enemies)) throw new WrongEnemyTag("All enemies must have the 'Enemy' Tag!");
         this.enemies = enemies;
         this.PopulateHealthMap(enemies);
-        Debug.Log("Health Map: ");
-        Debug.Log(this.healthMap);
     }
 
     /**
