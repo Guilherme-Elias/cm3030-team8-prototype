@@ -11,6 +11,14 @@ public class PlayerAction : MonoBehaviour
     private const float MAX_HEALTH = 100;
     private float currentHealth = 0;
 
+    public GameObject Foodaud;
+
+    public AudioSource damage_aud;
+
+    public GameObject GameOverUI;
+    public CameraBehaviour Camb;
+    public GunController Gunc;
+
     void Start()
     {
         RestoreHealth(MAX_HEALTH);
@@ -20,8 +28,22 @@ public class PlayerAction : MonoBehaviour
 
     void Update()
     {
+        if (Input.GetAxis("Horizontal") != 0 || Input.GetAxis("Vertical") != 0)
+        {
+            if (!gameObject.GetComponent<AudioSource>().isPlaying)
+            {
+                gameObject.GetComponent<AudioSource>().Play();
+                Debug.Log("Walk");
+            }
+          
+        }
+        else
+        {
+            gameObject.GetComponent<AudioSource>().Stop();
+        }
 
-        if (Input.GetKeyDown(KeyCode.Mouse0))
+
+            if (Input.GetKeyDown(KeyCode.Mouse0))
         {
             this.Shoot();
         }
@@ -42,14 +64,29 @@ public class PlayerAction : MonoBehaviour
         gunController.Reload();
     }
 
-    private void RestoreHealth(float amount)
+    public void RestoreHealth(float amount)
     {
         float futureHealth = this.currentHealth + amount;
         if (futureHealth >= MAX_HEALTH)
         {
             this.currentHealth = MAX_HEALTH;
+            this.healthBar.SetHealth(this.currentHealth);
             return;
         }            
+        this.currentHealth = futureHealth;
+        this.healthBar.SetHealth(this.currentHealth);
+    }
+    public void RecoverHealth(float amount)
+    {
+        GameObject obj = Instantiate(Foodaud);
+        Destroy(obj, 1);
+        float futureHealth = this.currentHealth + amount;
+        if (futureHealth >= MAX_HEALTH)
+        {
+            this.currentHealth = MAX_HEALTH;
+            this.healthBar.SetHealth(this.currentHealth);
+            return;
+        }
         this.currentHealth = futureHealth;
         this.healthBar.SetHealth(this.currentHealth);
     }
@@ -66,6 +103,10 @@ public class PlayerAction : MonoBehaviour
 
         this.currentHealth = futureHealth;
         this.healthBar.SetHealth(this.currentHealth);
+        if (!damage_aud.isPlaying)
+        {
+            damage_aud.Play();
+        }
     }
 
     public void Die()
@@ -73,6 +114,12 @@ public class PlayerAction : MonoBehaviour
         // todo: endgame logic
         // todo: add death sound
         Debug.Log("You have died!");
-        
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+        Camb.enabled = false;
+        Gunc.gameObject.SetActive(false);
+        GameOverUI.SetActive(true);
+        Time.timeScale = 0;
+
     }
 }

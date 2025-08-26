@@ -10,6 +10,8 @@ public class PlayerMovement : MonoBehaviour
     private float jumpForceMagnitude = 5f;
     public float mouseSensitivity = 5f;
 
+    public AudioSource Jump_aud;
+
     void Start()
     {
         // player won't rotate by itself
@@ -53,6 +55,7 @@ public class PlayerMovement : MonoBehaviour
 
         if(Input.GetKeyDown(KeyCode.Space) && IsAtTheGround())
         {
+            Jump_aud.Play();
             player.AddForce(Vector3.up * jumpForceMagnitude, ForceMode.VelocityChange);
         }
 

@@ -47,11 +47,13 @@ public class EnemySpawner : MonoBehaviour
 
     private void SpawnNewEnemy()
     {
-        Vector3 randomOffset = new Vector3(Random.Range(-5f, 5f), 1f, Random.Range(-5f, 5f)); // not overlap positions
+        Vector3 randomOffset = new Vector3(Random.Range(-5f, 5f), 1f, Random.Range(-3f, 3)); // not overlap positions
         Vector3 spawnPosition = spawnLocation.position + randomOffset;
+        // Vector3 spawnPosition = spawnLocation.position + randomOffset;
+
         Quaternion spawnRotation = Quaternion.identity;
 
-        GameObject newEnemy = Instantiate(enemyPrefab, spawnPosition, spawnRotation);
+        GameObject newEnemy = Instantiate(enemyPrefab, randomOffset, spawnRotation);
 
         if (!newEnemy.CompareTag("Enemy"))
             newEnemy.tag = "Enemy";
@@ -61,6 +63,7 @@ public class EnemySpawner : MonoBehaviour
 
     private void UpdateEnemyController()
     {
+        /*
         List<NavMeshAgent> agents = new List<NavMeshAgent>();
         foreach (var spawnedEnemy in this.spawnedEnemies)
         {
@@ -73,6 +76,7 @@ public class EnemySpawner : MonoBehaviour
         }
 
         enemyController.SetAgents(agents.ToArray());
+        */
     }
 
     private void UpdateBulletTargetBehaviour()
