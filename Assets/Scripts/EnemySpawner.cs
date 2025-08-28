@@ -8,15 +8,34 @@ public class EnemySpawner : MonoBehaviour
     public int enemiesPerWave = 3;
     public float spawnInterval = 5f;
     public int maxAliveEnemies = 3;
-    public Transform spawnLocation;
     public GameObject enemyPrefab; // must have a NavMeshAgent component
+    public string spawnTag = "SpawnPoint";
 
     [Header("Required Managers")]
     public EnemyController enemyController;
     public BulletTargetBehaviour bulletTargetBehaviour;
 
+    private Transform[] spawnLocations;
     private List<GameObject> spawnedEnemies = new List<GameObject>();
     private float nextTimeToSpawn = 0f;
+
+    private void Awake()
+    {
+        GameObject[] spawnPointObjects = GameObject.FindGameObjectsWithTag(spawnTag);
+        if (spawnPointObjects.Length > 0)
+        {
+            spawnLocations = new Transform[spawnPointObjects.Length];
+            for (int i = 0; i < spawnPointObjects.Length; i++)
+            {
+                spawnLocations[i] = spawnPointObjects[i].transform;
+            }
+        }
+        else
+        {
+            Debug.LogError($"No game objects found with the tag '{spawnTag}'. Enemies will not spawn.");
+            this.enabled = false;
+        }
+    }
 
     private void Update()
     {
@@ -47,8 +66,12 @@ public class EnemySpawner : MonoBehaviour
 
     private void SpawnNewEnemy()
     {
-        Vector3 randomOffset = new Vector3(Random.Range(-5f, 5f), 1f, Random.Range(-5f, 5f)); // not overlap positions
-        Vector3 spawnPosition = spawnLocation.position + randomOffset;
+        if (spawnLocations == null || spawnLocations.Length == 0) return;
+
+        Transform usedSpawnLocation = spawnLocations[Random.Range(0, spawnLocations.Length)];
+
+        Vector3 randomOffset = new Vector3(Random.Range(-2f, 2f), 1f, Random.Range(-2f, 2f)); // not overlap positions
+        Vector3 spawnPosition = usedSpawnLocation.position + randomOffset;
         Quaternion spawnRotation = Quaternion.identity;
 
         GameObject newEnemy = Instantiate(enemyPrefab, spawnPosition, spawnRotation);
