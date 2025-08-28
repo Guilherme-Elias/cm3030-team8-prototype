@@ -11110,6 +11110,8 @@ MonoBehaviour:
   maxAliveEnemies: 5
   enemyPrefab: {fileID: 6911346458639847058, guid: 8e2346ccbc4a26d45a7bf2254de03d0c,
     type: 3}
+  target: {fileID: 1153021228}
+  spawnZoneExclusion: 10
   spawnTag: EnemySpawnPoint
   enemyController: {fileID: 657520132}
   bulletTargetBehaviour: {fileID: 657520131}
@@ -19645,7 +19647,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2110447985}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -29.61, y: 0, z: -0.57}
+  m_LocalPosition: {x: -0.34, y: 0, z: -29.93}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 895236961}
