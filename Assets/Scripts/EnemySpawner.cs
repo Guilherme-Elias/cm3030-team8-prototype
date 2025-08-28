@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.Reflection;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -8,15 +10,36 @@ public class EnemySpawner : MonoBehaviour
     public int enemiesPerWave = 3;
     public float spawnInterval = 5f;
     public int maxAliveEnemies = 3;
-    public Transform spawnLocation;
     public GameObject enemyPrefab; // must have a NavMeshAgent component
+    public Transform target;
+    public float spawnZoneExclusion = 10f; // distance to check that no player is in before considering it as active
+    public string spawnTag = "SpawnPoint";
 
     [Header("Required Managers")]
     public EnemyController enemyController;
     public BulletTargetBehaviour bulletTargetBehaviour;
 
+    private Transform[] spawnLocations;
     private List<GameObject> spawnedEnemies = new List<GameObject>();
     private float nextTimeToSpawn = 0f;
+
+    private void Awake()
+    {
+        GameObject[] spawnPointObjects = GameObject.FindGameObjectsWithTag(spawnTag);
+        if (spawnPointObjects.Length > 0)
+        {
+            spawnLocations = new Transform[spawnPointObjects.Length];
+            for (int i = 0; i < spawnPointObjects.Length; i++)
+            {
+                spawnLocations[i] = spawnPointObjects[i].transform;
+            }
+        }
+        else
+        {
+            Debug.LogError($"No game objects found with the tag '{spawnTag}'. Enemies will not spawn.");
+            this.enabled = false;
+        }
+    }
 
     private void Update()
     {
@@ -29,6 +52,26 @@ public class EnemySpawner : MonoBehaviour
         this.CleanDeadEnemies();
     }
 
+    private Vector3 GetBestSpawnPosition()
+    {
+        Vector3 playerPosition = target.position;
+        List<Vector3> furthestPoints = new List<Vector3>();
+
+        for (int i = 0; i < spawnLocations.Length; i++)
+        {
+            Vector3 spawnPos = spawnLocations[i].position;
+
+            if (Vector3.Distance(playerPosition, spawnPos) > this.spawnZoneExclusion)
+            {
+                furthestPoints.Add(spawnPos);
+            }
+        }
+
+        Vector3 randomPos = furthestPoints[Random.Range(0,  furthestPoints.Count)];
+
+        return randomPos;
+    }
+
     private void SpawnWave()
     {
         int aliveEnemies = this.spawnedEnemies.FindAll(e => e != null).Count;
@@ -36,19 +79,23 @@ public class EnemySpawner : MonoBehaviour
 
         int toSpawn = Mathf.Min(enemiesPerWave, maxAliveEnemies - aliveEnemies);
 
+        Vector3 spawnPos = this.GetBestSpawnPosition();
+
         for (int i = 0; i < toSpawn; i++)
         {
-            this.SpawnNewEnemy();
+            this.SpawnNewEnemy(spawnPos);
         }
 
         this.UpdateEnemyController();
         this.UpdateBulletTargetBehaviour();
     }
 
-    private void SpawnNewEnemy()
+    private void SpawnNewEnemy(Vector3 spawnPos)
     {
-        Vector3 randomOffset = new Vector3(Random.Range(-5f, 5f), 1f, Random.Range(-5f, 5f)); // not overlap positions
-        Vector3 spawnPosition = spawnLocation.position + randomOffset;
+        if (spawnLocations == null || spawnLocations.Length == 0) return;
+
+        Vector3 randomOffset = new Vector3(Random.Range(-2f, 2f), 1f, Random.Range(-2f, 2f)); // not overlap positions
+        Vector3 spawnPosition = spawnPos + randomOffset;
         Quaternion spawnRotation = Quaternion.identity;
 
         GameObject newEnemy = Instantiate(enemyPrefab, spawnPosition, spawnRotation);
