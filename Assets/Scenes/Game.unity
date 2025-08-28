@@ -11075,9 +11075,9 @@ MonoBehaviour:
   enemiesPerWave: 2
   spawnInterval: 5
   maxAliveEnemies: 5
-  spawnLocation: {fileID: 895236961}
   enemyPrefab: {fileID: 6911346458639847058, guid: 8e2346ccbc4a26d45a7bf2254de03d0c,
     type: 3}
+  spawnTag: EnemySpawnPoint
   enemyController: {fileID: 657520132}
   bulletTargetBehaviour: {fileID: 657520131}
 --- !u!1 &942188745
