@@ -7,6 +7,7 @@ TagManager:
   - Enemy
   - Ground
   - Food
+  - EnemySpawnPoint
   layers:
   - Default
   - TransparentFX
