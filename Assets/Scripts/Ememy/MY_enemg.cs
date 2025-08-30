@@ -5,22 +5,22 @@ using UnityEngine.AI;
 using UnityEngine.UI;
 public enum mstate
     {
-        XunLuo,
-        ZhuiZhu,
-        GongJi,
+        XunLuo,  // patrol
+        ZhuiZhu, // chase
+        GongJi, // attack
 
     }
 
-public class zhauntai
+public class zhauntai   
 {
-    public static bool iskuangbao = false;
+    public static bool iskuangbao = false; 
 }
 
 public class MY_enemg : MonoBehaviour {
 
 
 
-    public mstate my_state = mstate.XunLuo;
+    public mstate my_state = mstate.XunLuo;  // default state is patrol
 
     Quaternion b = new Quaternion(0, 0, 0, 0);
 
@@ -84,7 +84,7 @@ public class MY_enemg : MonoBehaviour {
 
                 if (Vector3.Distance(transform.position, m_player.transform.position) < 20f)
                 {
-                    my_state = mstate.ZhuiZhu;
+                    my_state = mstate.ZhuiZhu; // change to chase state
                     break;
                 }
 
@@ -103,7 +103,7 @@ public class MY_enemg : MonoBehaviour {
                 */
 
                 break;
-            case mstate.ZhuiZhu:
+            case mstate.ZhuiZhu: // chase
                 if(IsShoot==false)
                 {
                     IsShoot = true;
@@ -123,12 +123,12 @@ public class MY_enemg : MonoBehaviour {
                 if (Vector3.Distance(transform.position, m_player.transform.position) <2)
                 {
                    
-                    my_state = mstate.GongJi;
+                    my_state = mstate.GongJi;  // change to attack state
                     m_agent.ResetPath();
                 }
 
                 break;
-            case mstate.GongJi:
+            case mstate.GongJi: // attack
                 if(IsShoot)
                 {
                     IsShoot = false;
@@ -140,11 +140,11 @@ public class MY_enemg : MonoBehaviour {
 
                 if (Vector3.Distance(transform.position, m_player.transform.position) >300)
                 {
-                    my_state = mstate.XunLuo;
+                    my_state = mstate.XunLuo; // change to patrol state
                 }
                 if (Vector3.Distance(transform.position, m_player.transform.position) >2)
                 {
-                    my_state = mstate.ZhuiZhu;
+                    my_state = mstate.ZhuiZhu; // change to chase state
                 }
 
                 break;
@@ -153,7 +153,7 @@ public class MY_enemg : MonoBehaviour {
     }
 
 
-    void RotateTo()
+    void RotateTo() // rotate to the player
     {
         Vector3 targetdir = m_player.transform.position - transform.position;
 
@@ -163,7 +163,7 @@ public class MY_enemg : MonoBehaviour {
     }
 
 
-    public void Damage()
+    public void Damage() // damage the enemy    (when the player shoots the enemy)    
     {
         if (Time.timeScale == 0)
         {
