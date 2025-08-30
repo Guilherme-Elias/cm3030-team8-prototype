@@ -123,8 +123,13 @@ public class GunController : MonoBehaviour
             if (hitInfo.collider.CompareTag("Enemy")) // enemy hit logic
             {
                 if (hitInfo.rigidbody != null)
+                {
+                    hitInfo.collider.GetComponent<MY_enemg>().Damage();
+                }
+                    /*
                     bulletTarget.ApplyForce(hitInfo.rigidbody, -hitInfo.normal * impact);
                 bulletTarget.TakeDamage(10f, hitInfo.collider.gameObject);
+                    */
             }
 
 
