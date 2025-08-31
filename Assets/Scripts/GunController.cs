@@ -115,7 +115,7 @@ public class GunController : MonoBehaviour
     {
         RaycastHit hitInfo;
         
-        float impact = 10f;
+        //float impact = 10f;
         bool hitSomething = Physics.Raycast(mainCamera.transform.position, mainCamera.transform.forward, out hitInfo, this.shootingRange);
 
         if (hitSomething)

@@ -1,156 +1,65 @@
 ﻿using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.Reflection;
 using UnityEngine;
-using UnityEngine.AI;
+using System;
 
 public class EnemySpawner : MonoBehaviour
 {
-    [Header("Spawner Settings")]
-    public int enemiesPerWave = 3;
-    public float spawnInterval = 5f;
-    public int maxAliveEnemies = 3;
-    public GameObject enemyPrefab; // must have a NavMeshAgent component
-    public Transform target;
-    public float spawnZoneExclusion = 10f; // distance to check that no player is in before considering it as active
-    public string spawnTag = "EnemySpawnPoint";
-
     [Header("Required Managers")]
-    public EnemyController enemyController;
     public BulletTargetBehaviour bulletTargetBehaviour;
 
-    private Transform[] spawnLocations;
-    private List<GameObject> spawnedEnemies = new List<GameObject>();
-    private float nextTimeToSpawn = 0f;
+    private SpawnPoint[] spawnPoints;
+    private List<GameObject> globalSpawnedEnemies = new List<GameObject>();
 
     private void Awake()
     {
-        GameObject[] spawnPointObjects = GameObject.FindGameObjectsWithTag(spawnTag);
-        if (spawnPointObjects.Length > 0)
-        {
-            spawnLocations = new Transform[spawnPointObjects.Length];
-            for (int i = 0; i < spawnPointObjects.Length; i++)
-            {
-                spawnLocations[i] = spawnPointObjects[i].transform;
-                Debug.Log($"Adding spawnpos ({i}) {spawnPointObjects[i].transform.position}");
-            }
-
-            Debug.Log($"Found '{spawnLocations.Length}' spawn points.");
-        }
-        else
-        {
-            Debug.LogError($"No spawnpoints found for the tag: '{spawnTag}'. Enemies will not spawn.");
-            this.enabled = false;
-        }
+        spawnPoints = FindObjectsOfType<SpawnPoint>();
+        if (spawnPoints.Length == 0) throw new NoSpawnPointsException("You passed no spawn points to the Enemy Spawner!");
     }
 
     private void Update()
     {
-        if (Time.time >= this.nextTimeToSpawn)
-        {
-            this.SpawnWave();
-            this.nextTimeToSpawn = Time.time + spawnInterval;
-        }
+        this.SpawnWave();
+        this.MakeModelsEven();
 
-        this.CleanDeadEnemies();
-    }
-
-    private Vector3 GetBestSpawnPosition()
-    {
-        Vector3 playerPosition = target.position;
-        List<Vector3> furthestPoints = new List<Vector3>();
-
-
-        for (int i = 0; i < spawnLocations.Length; i++)
-        {
-            Vector3 spawnPos = spawnLocations[i].position;
-
-            float distanceSpawnToPlayer = Vector3.Distance(playerPosition, spawnPos);
-            Debug.Log($"SpawnPos: {spawnPos} - PlayerPos: {playerPosition} - distance: {distanceSpawnToPlayer}");
-
-            if (distanceSpawnToPlayer > this.spawnZoneExclusion)
-            {
-                furthestPoints.Add(spawnPos);
-            }
-        }
-
-        Vector3 randomPos = furthestPoints[Random.Range(0,  furthestPoints.Count)];
-
-        Debug.Log($"Spawning enemies at {randomPos}.");
-
-        return randomPos;
+        if (globalSpawnedEnemies.Count > 0) 
+            this.UpdateBulletTargetBehaviour();
     }
 
     private void SpawnWave()
     {
-        int aliveEnemies = this.spawnedEnemies.FindAll(e => e != null).Count;
-        if (aliveEnemies >= maxAliveEnemies) return;
-
-        int toSpawn = Mathf.Min(enemiesPerWave, maxAliveEnemies - aliveEnemies);
-
-        Vector3 spawnPos = this.GetBestSpawnPosition();
-
-        for (int i = 0; i < toSpawn; i++)
+        foreach (SpawnPoint spawnPoint in spawnPoints)
         {
-            this.SpawnNewEnemy(spawnPos);
+            spawnPoint.SpawnEnemies();
         }
-
-        // Debug code to check how far the AI was spawned from the player
-        Vector3 playerPosition = target.position;
-        float distance = Vector3.Distance(playerPosition, spawnPos);
-        Debug.Log($"Spawned {toSpawn} zombies at {distance} units from player at {spawnPos}");
-
-        this.UpdateEnemyController();
-        this.UpdateBulletTargetBehaviour();
     }
 
-    private void SpawnNewEnemy(Vector3 spawnPos)
+    private void MakeModelsEven()
     {
-        Vector3 randomOffset = new Vector3(Random.Range(-5f, 5f), 1f, Random.Range(-3f, 3)); // not overlap positions
-        Vector3 spawnPosition = spawnPos + randomOffset;
+        // Clear the list first to avoid adding duplicates every frame!
+        this.globalSpawnedEnemies.Clear();
 
-        Quaternion spawnRotation = Quaternion.identity;
-
-        GameObject newEnemy = Instantiate(enemyPrefab, randomOffset, spawnRotation);
-
-        if (!newEnemy.CompareTag("Enemy"))
-            newEnemy.tag = "Enemy";
-
-        spawnedEnemies.Add(newEnemy);
-    }
-
-    private void UpdateEnemyController()
-    {
-        /*
-        List<NavMeshAgent> agents = new List<NavMeshAgent>();
-        foreach (var spawnedEnemy in this.spawnedEnemies)
+        foreach (SpawnPoint spawnPoint in spawnPoints)
         {
-            if (spawnedEnemy != null)
+            List<GameObject> spawnPointEnemies = spawnPoint.obtainSpawnPointSpawnedEnemies();
+            foreach (GameObject spawnPointEnemy in spawnPointEnemies)
             {
-                NavMeshAgent agent = spawnedEnemy.GetComponent<NavMeshAgent>();
-                if (agent != null)
-                    agents.Add(agent);
+                this.globalSpawnedEnemies.Add(spawnPointEnemy);
             }
         }
-
-        enemyController.SetAgents(agents.ToArray());
-        */
     }
 
     private void UpdateBulletTargetBehaviour()
     {
-        bulletTargetBehaviour.SetEnemies(this.spawnedEnemies.FindAll(e => e != null).ToArray());
+        bulletTargetBehaviour.SetEnemies(this.globalSpawnedEnemies.FindAll(e => e != null).ToArray());
     }
 
-    private void CleanDeadEnemies() // free memory of dead enemies
+    /**
+     * EXCEPTIONS USED IN THIS CLASS
+     */
+
+    private class NoSpawnPointsException : Exception
     {
-        for (int i = spawnedEnemies.Count - 1; i >= 0; i--)
-        {
-            if (spawnedEnemies[i] == null)
-            {
-                spawnedEnemies.RemoveAt(i);
-            }
-        }
+        public NoSpawnPointsException() { }
+        public NoSpawnPointsException(string message) : base(message) { }
     }
-
 }

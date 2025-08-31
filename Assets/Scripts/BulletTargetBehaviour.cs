@@ -50,7 +50,7 @@ public class BulletTargetBehaviour : MonoBehaviour
 
     private void Die(GameObject deadEnemy)
     {
-        // removing from world
+        // removing from world (GameObject will become a NullPointer)
         Destroy(deadEnemy);
 
         // removing from DS
