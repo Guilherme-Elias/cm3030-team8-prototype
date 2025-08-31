@@ -13,7 +13,7 @@ public class EnemySpawner : MonoBehaviour
     public GameObject enemyPrefab; // must have a NavMeshAgent component
     public Transform target;
     public float spawnZoneExclusion = 10f; // distance to check that no player is in before considering it as active
-    public string spawnTag = "SpawnPoint";
+    public string spawnTag = "EnemySpawnPoint";
 
     [Header("Required Managers")]
     public EnemyController enemyController;
@@ -93,8 +93,7 @@ public class EnemySpawner : MonoBehaviour
     private void SpawnNewEnemy(Vector3 spawnPos)
     {
         Vector3 randomOffset = new Vector3(Random.Range(-5f, 5f), 1f, Random.Range(-3f, 3)); // not overlap positions
-        Vector3 spawnPosition = spawnLocation.position + randomOffset;
-        // Vector3 spawnPosition = spawnLocation.position + randomOffset;
+        Vector3 spawnPosition = spawnPos + randomOffset;
 
         Quaternion spawnRotation = Quaternion.identity;
 
