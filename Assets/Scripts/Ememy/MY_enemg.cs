@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.UI;
 
-public enum mstate
+public enum ZombieState
 {
     Patrol,
     Chase,
@@ -18,32 +18,29 @@ public enum mstate
 
 public class MY_enemg : MonoBehaviour {
 
-    public mstate my_state = mstate.Patrol;  // default state is patrol
+    public ZombieState entityState = ZombieState.Patrol;  // default state is patrol
 
     Quaternion b = new Quaternion(0, 0, 0, 0);
 
-    public Animator m_ani;
+    public Animator entityAnimator;
 
-    NavMeshAgent m_agent;
-
-    public GameObject m_player;
-
-    float m_movSpeed = 1.5f;
+    NavMeshAgent entity;
 
     public GameObject[] point;
-    bool IsShoot=true;
+    bool isAttacking=true;
 
-    int index = 0;
     public float hp = 0.34f;
     public GameObject hit;
     public AudioSource Hit_source;
-    public Image hpima;
+    public Image healthbarImage;
     private bool isaud = false;
+
+    private GameObject playerEntity;
 
     // Use this for initialization
     void Start () {
-        m_agent = GetComponent<UnityEngine.AI.NavMeshAgent>();
-        m_player = GameObject.FindGameObjectWithTag("Player");
+        entity = GetComponent<UnityEngine.AI.NavMeshAgent>();
+        playerEntity = GameObject.FindGameObjectWithTag("Player");
     }
 
     public void Shoot()
@@ -65,63 +62,66 @@ public class MY_enemg : MonoBehaviour {
 
     // Update is called once per frame
     void Update () {
-        m_player = GameObject.FindGameObjectWithTag("Player");
-        switch (my_state)
+        playerEntity = GameObject.FindGameObjectWithTag("Player");
+
+        switch (entityState)
         {
-            case mstate.Patrol:
-                m_ani.SetBool("run", false);
+            case ZombieState.Patrol:
+                entityAnimator.SetBool("run", false);
 
-                m_ani.SetBool("attack", false);
+                entityAnimator.SetBool("attack", false);
 
-                if (Vector3.Distance(transform.position, m_player.transform.position) < 20f)
+                if (Vector3.Distance(transform.position, playerEntity.transform.position) < 20f)
                 {
-                    my_state = mstate.Chase; // change to chase state
+                    entityState = ZombieState.Chase; // change to chase state
                     break;
                 }
 
                 break;
             
-            case mstate.Chase: // chase
-                if(IsShoot==false)
+            case ZombieState.Chase: // chase
+                if(isAttacking==false)
                 {
-                    IsShoot = true;
+                    isAttacking = true;
                     CancelInvoke("Shoot");
                 }
+
                 if(!isaud)
                 {
                     isaud = true;
                     gameObject.GetComponent<AudioSource>().Play();
                 }
-                m_ani.SetBool("run", true);
-                m_ani.SetBool("attack", false);
-                m_agent.SetDestination(m_player.transform.position);
 
-                if (Vector3.Distance(transform.position, m_player.transform.position) <2)
+                entityAnimator.SetBool("run", true);
+                entityAnimator.SetBool("attack", false);
+                entity.SetDestination(playerEntity.transform.position);
+
+                if (Vector3.Distance(transform.position, playerEntity.transform.position) <2)
                 {
                    
-                    my_state = mstate.Attack;  // change to attack state
-                    m_agent.ResetPath();
+                    entityState = ZombieState.Attack;  // change to attack state
+                    entity.ResetPath();
                 }
 
                 break;
 
-            case mstate.Attack: // attack
-                if(IsShoot)
+            case ZombieState.Attack: // attack
+                if(isAttacking)
                 {
-                    IsShoot = false;
+                    isAttacking = false;
                     InvokeRepeating("Shoot", 1.2f, 3);
                 }
-                m_agent.ResetPath();
-                m_ani.SetBool("attack", true);
+                entity.ResetPath();
+                entityAnimator.SetBool("attack", true);
                 RotateTo();
 
-                if (Vector3.Distance(transform.position, m_player.transform.position) >300)
+                if (Vector3.Distance(transform.position, playerEntity.transform.position) >300)
                 {
-                    my_state = mstate.Patrol; // change to patrol state
+                    entityState = ZombieState.Patrol; // change to patrol state
                 }
-                if (Vector3.Distance(transform.position, m_player.transform.position) >2)
+                if (Vector3.Distance(transform.position, playerEntity.transform.position) >2)
                 {
-                    my_state = mstate.Chase; // change to chase state
+                    entityState = ZombieState.Chase; // change to chase state
                 }
 
                 break;
@@ -130,7 +130,7 @@ public class MY_enemg : MonoBehaviour {
 
     void RotateTo() // rotate to the player
     {
-        Vector3 targetdir = m_player.transform.position - transform.position;
+        Vector3 targetdir = playerEntity.transform.position - transform.position;
 
         Vector3 newDir = Vector3.RotateTowards(transform.forward, targetdir, 5 * Time.deltaTime, 0.0f);
 
@@ -143,7 +143,7 @@ public class MY_enemg : MonoBehaviour {
         {
             return;
         }
-        if (hpima.fillAmount <= 0)
+        if (healthbarImage.fillAmount <= 0)
         {
             return;
         }
@@ -152,8 +152,8 @@ public class MY_enemg : MonoBehaviour {
         Hit.transform.parent =null;
         Destroy(Hit.gameObject, 1f);
 
-        hpima.fillAmount -= hp;
-        if (hpima.fillAmount <= 0)
+        healthbarImage.fillAmount -= hp;
+        if (healthbarImage.fillAmount <= 0)
         {
             Destroy(gameObject);
         }
