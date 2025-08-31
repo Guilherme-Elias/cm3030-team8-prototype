@@ -8,7 +8,7 @@ public class SpawnPoint : MonoBehaviour
     public int amountOfEnemiesPerWave = 3;
     public int maxAliveEnemies = 3;
     public float spawnInterval = 5f;
-    public Transform playerTransform;
+    public GameObject player;
     public GameObject enemyPrefab;
 
     private float rangeToSpawn = 15f;
@@ -45,7 +45,8 @@ public class SpawnPoint : MonoBehaviour
     private bool IsPlayerTooClose()
     {
         Vector3 spawnPointPosition = this.transform.position;
-        Vector3 playerPosition = playerTransform.position;
+        Vector3 playerPosition = player.transform.position;
+        Debug.Log($"Spawndistance check: {Vector3.Distance(spawnPointPosition, playerPosition)} - spawn: {spawnPointPosition} - player: {playerPosition}");
         return Vector3.Distance(spawnPointPosition, playerPosition) < rangeToSpawn;
     }
 

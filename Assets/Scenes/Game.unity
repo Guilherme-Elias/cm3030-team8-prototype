@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.451401, g: 0.5008942, b: 0.5723129, a: 1}
+  m_IndirectSpecularColor: {r: 0.45140076, g: 0.50089306, b: 0.57231265, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -2992,10 +2992,20 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 659146270608656747, guid: 2f4fd7b77f281464bb99046ea2d8394a,
+        type: 3}
+      propertyPath: player
+      value: 
+      objectReference: {fileID: 1153021221}
     - target: {fileID: 1138327922894081154, guid: 2f4fd7b77f281464bb99046ea2d8394a,
         type: 3}
       propertyPath: m_Name
       value: SpawnPoint (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 1138327922894081154, guid: 2f4fd7b77f281464bb99046ea2d8394a,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5800112786195704538, guid: 2f4fd7b77f281464bb99046ea2d8394a,
         type: 3}
@@ -14001,6 +14011,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 659146270608656747, guid: 2f4fd7b77f281464bb99046ea2d8394a,
+        type: 3}
+      propertyPath: player
+      value: 
+      objectReference: {fileID: 1153021221}
     - target: {fileID: 1138327922894081154, guid: 2f4fd7b77f281464bb99046ea2d8394a,
         type: 3}
       propertyPath: m_Name
@@ -15563,10 +15578,20 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 659146270608656747, guid: 2f4fd7b77f281464bb99046ea2d8394a,
+        type: 3}
+      propertyPath: player
+      value: 
+      objectReference: {fileID: 1153021221}
     - target: {fileID: 1138327922894081154, guid: 2f4fd7b77f281464bb99046ea2d8394a,
         type: 3}
       propertyPath: m_Name
       value: SpawnPoint (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 1138327922894081154, guid: 2f4fd7b77f281464bb99046ea2d8394a,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5800112786195704538, guid: 2f4fd7b77f281464bb99046ea2d8394a,
         type: 3}
