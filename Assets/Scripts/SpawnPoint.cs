@@ -46,7 +46,7 @@ public class SpawnPoint : MonoBehaviour
     {
         Vector3 spawnPointPosition = this.transform.position;
         Vector3 playerPosition = player.transform.position;
-        Debug.Log($"Spawndistance check: {Vector3.Distance(spawnPointPosition, playerPosition)} - spawn: {spawnPointPosition} - player: {playerPosition}");
+
         return Vector3.Distance(spawnPointPosition, playerPosition) < rangeToSpawn;
     }
 
