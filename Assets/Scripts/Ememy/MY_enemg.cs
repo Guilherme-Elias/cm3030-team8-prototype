@@ -3,24 +3,22 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.UI;
+
 public enum mstate
-    {
-        XunLuo,  // patrol
-        ZhuiZhu, // chase
-        GongJi, // attack
-
-    }
-
-public class zhauntai   
 {
-    public static bool iskuangbao = false; 
+    Patrol,
+    Chase,
+    Attack, 
 }
+
+//public class zhauntai   
+//{
+//    public static bool iskuangbao = false; 
+//}
 
 public class MY_enemg : MonoBehaviour {
 
-
-
-    public mstate my_state = mstate.XunLuo;  // default state is patrol
+    public mstate my_state = mstate.Patrol;  // default state is patrol
 
     Quaternion b = new Quaternion(0, 0, 0, 0);
 
@@ -41,28 +39,22 @@ public class MY_enemg : MonoBehaviour {
     public AudioSource Hit_source;
     public Image hpima;
     private bool isaud = false;
+
     // Use this for initialization
     void Start () {
-
-
         m_agent = GetComponent<UnityEngine.AI.NavMeshAgent>();
-      //  m_agent.speed = m_movSpeed;
-
         m_player = GameObject.FindGameObjectWithTag("Player");
-        
     }
+
     public void Shoot()
     {
         GameObject.Find("PlayerManager").GetComponent<PlayerAction>().TakeDamage(10);
     }
+
     private void OnTriggerEnter(Collider other)
     {
-        if(other.gameObject.tag=="bullet")
+        if(other.gameObject.tag == "bullet")
         {
-           // Hit_source.Play();
-
-           
-
             GameObject Hit = GameObject.Instantiate(hit, other.gameObject.transform.position, b) as GameObject;
             Hit.SetActive(true);
             Hit.transform.parent = gameObject.transform;
@@ -70,40 +62,26 @@ public class MY_enemg : MonoBehaviour {
             Damage();
         }
     }
+
     // Update is called once per frame
     void Update () {
         m_player = GameObject.FindGameObjectWithTag("Player");
         switch (my_state)
         {
-
-            case mstate.XunLuo:
+            case mstate.Patrol:
                 m_ani.SetBool("run", false);
 
                 m_ani.SetBool("attack", false);
-              //  m_agent.SetDestination(point[index].transform.position);
 
                 if (Vector3.Distance(transform.position, m_player.transform.position) < 20f)
                 {
-                    my_state = mstate.ZhuiZhu; // change to chase state
+                    my_state = mstate.Chase; // change to chase state
                     break;
                 }
 
-                /*
-                if (Vector3.Distance(transform.position, point[index].transform.position) <1)
-                {
-                    index++;
-
-                    if (index == point.Length)
-                    {
-                        index = 0;
-                    }
-                    m_agent.SetDestination(point[index].transform.position);
-
-                }
-                */
-
                 break;
-            case mstate.ZhuiZhu: // chase
+            
+            case mstate.Chase: // chase
                 if(IsShoot==false)
                 {
                     IsShoot = true;
@@ -118,17 +96,16 @@ public class MY_enemg : MonoBehaviour {
                 m_ani.SetBool("attack", false);
                 m_agent.SetDestination(m_player.transform.position);
 
-
-
                 if (Vector3.Distance(transform.position, m_player.transform.position) <2)
                 {
                    
-                    my_state = mstate.GongJi;  // change to attack state
+                    my_state = mstate.Attack;  // change to attack state
                     m_agent.ResetPath();
                 }
 
                 break;
-            case mstate.GongJi: // attack
+
+            case mstate.Attack: // attack
                 if(IsShoot)
                 {
                     IsShoot = false;
@@ -140,18 +117,16 @@ public class MY_enemg : MonoBehaviour {
 
                 if (Vector3.Distance(transform.position, m_player.transform.position) >300)
                 {
-                    my_state = mstate.XunLuo; // change to patrol state
+                    my_state = mstate.Patrol; // change to patrol state
                 }
                 if (Vector3.Distance(transform.position, m_player.transform.position) >2)
                 {
-                    my_state = mstate.ZhuiZhu; // change to chase state
+                    my_state = mstate.Chase; // change to chase state
                 }
 
                 break;
-
         }
     }
-
 
     void RotateTo() // rotate to the player
     {
@@ -161,7 +136,6 @@ public class MY_enemg : MonoBehaviour {
 
         transform.rotation = Quaternion.LookRotation(newDir);
     }
-
 
     public void Damage() // damage the enemy    (when the player shoots the enemy)    
     {
@@ -184,6 +158,5 @@ public class MY_enemg : MonoBehaviour {
             Destroy(gameObject);
         }
 
-      
     }
 }
