@@ -10393,7 +10393,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   healthBar: {fileID: 2065531047}
-  foodAudio: {fileID: 0}
+  foodAudio: {fileID: 128675539533925420, guid: d3553603fe7b0ea42b1faaac792f8589,
+    type: 3}
   damageAudio: {fileID: 1496578416}
   GameOverUI: {fileID: 429866170}
   Camb: {fileID: 1492196198}
