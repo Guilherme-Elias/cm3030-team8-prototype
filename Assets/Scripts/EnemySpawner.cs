@@ -33,10 +33,12 @@ public class EnemySpawner : MonoBehaviour
             {
                 spawnLocations[i] = spawnPointObjects[i].transform;
             }
+
+            Debug.Log($"Found '{spawnLocations.Length}' spawn points.");
         }
         else
         {
-            Debug.LogError($"No game objects found with the tag '{spawnTag}'. Enemies will not spawn.");
+            Debug.LogError($"No spawnpoints found for the tag: '{spawnTag}'. Enemies will not spawn.");
             this.enabled = false;
         }
     }
@@ -57,15 +59,22 @@ public class EnemySpawner : MonoBehaviour
         Vector3 playerPosition = target.position;
         List<Vector3> furthestPoints = new List<Vector3>();
 
+
         for (int i = 0; i < spawnLocations.Length; i++)
         {
             Vector3 spawnPos = spawnLocations[i].position;
 
-            if (Vector3.Distance(playerPosition, spawnPos) > this.spawnZoneExclusion)
+            float distance = Vector3.Distance(playerPosition, spawnPos);
+
+            Debug.Log($"Checking spawnpos {i}, distance to player: {distance}");
+
+            if (distance > this.spawnZoneExclusion)
             {
                 furthestPoints.Add(spawnPos);
             }
         }
+
+        Debug.Log($"Found {furthestPoints.ToArray().Length} valid spawn points.");
 
         Vector3 randomPos = furthestPoints[Random.Range(0,  furthestPoints.Count)];
 
