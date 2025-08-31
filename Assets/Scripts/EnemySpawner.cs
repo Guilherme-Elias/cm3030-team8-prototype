@@ -32,6 +32,7 @@ public class EnemySpawner : MonoBehaviour
             for (int i = 0; i < spawnPointObjects.Length; i++)
             {
                 spawnLocations[i] = spawnPointObjects[i].transform;
+                Debug.Log($"Adding spawnpos ({i}) {spawnPointObjects[i].transform.position}");
             }
 
             Debug.Log($"Found '{spawnLocations.Length}' spawn points.");
@@ -64,19 +65,18 @@ public class EnemySpawner : MonoBehaviour
         {
             Vector3 spawnPos = spawnLocations[i].position;
 
-            float distance = Vector3.Distance(playerPosition, spawnPos);
+            float distanceSpawnToPlayer = Vector3.Distance(playerPosition, spawnPos);
+            Debug.Log($"SpawnPos: {spawnPos} - PlayerPos: {playerPosition} - distance: {distanceSpawnToPlayer}");
 
-            Debug.Log($"Checking spawnpos {i}, distance to player: {distance}");
-
-            if (distance > this.spawnZoneExclusion)
+            if (distanceSpawnToPlayer > this.spawnZoneExclusion)
             {
                 furthestPoints.Add(spawnPos);
             }
         }
 
-        Debug.Log($"Found {furthestPoints.ToArray().Length} valid spawn points.");
-
         Vector3 randomPos = furthestPoints[Random.Range(0,  furthestPoints.Count)];
+
+        Debug.Log($"Spawning enemies at {randomPos}.");
 
         return randomPos;
     }
@@ -94,6 +94,11 @@ public class EnemySpawner : MonoBehaviour
         {
             this.SpawnNewEnemy(spawnPos);
         }
+
+        // Debug code to check how far the AI was spawned from the player
+        Vector3 playerPosition = target.position;
+        float distance = Vector3.Distance(playerPosition, spawnPos);
+        Debug.Log($"Spawned {toSpawn} zombies at {distance} units from player at {spawnPos}");
 
         this.UpdateEnemyController();
         this.UpdateBulletTargetBehaviour();
