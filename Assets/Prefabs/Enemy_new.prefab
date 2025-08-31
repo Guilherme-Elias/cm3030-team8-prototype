@@ -246,14 +246,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8bf924a3cd63d34cadf27375edeb3f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  my_state: 0
-  m_ani: {fileID: 2449490614893028865}
-  m_player: {fileID: 0}
+  entityState: 0
+  entityAnimator: {fileID: 2449490614893028865}
   point: []
   hp: 0.34
   hit: {fileID: 3204476588489034926}
   Hit_source: {fileID: 0}
-  hpima: {fileID: 8112323325919076465}
+  healthbarImage: {fileID: 8112323325919076465}
 --- !u!82 &1425248929408722446
 AudioSource:
   m_ObjectHideFlags: 0
