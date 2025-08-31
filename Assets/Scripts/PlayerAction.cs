@@ -11,9 +11,9 @@ public class PlayerAction : MonoBehaviour
     private const float MAX_HEALTH = 100;
     private float currentHealth = 0;
 
-    public GameObject Foodaud;
+    public GameObject foodAudio;
 
-    public AudioSource damage_aud;
+    public AudioSource damageAudio;
 
     public GameObject GameOverUI;
     public CameraBehaviour Camb;
@@ -43,7 +43,7 @@ public class PlayerAction : MonoBehaviour
         }
 
 
-            if (Input.GetKeyDown(KeyCode.Mouse0))
+        if (Input.GetKeyDown(KeyCode.Mouse0))
         {
             this.Shoot();
         }
@@ -78,7 +78,7 @@ public class PlayerAction : MonoBehaviour
     }
     public void RecoverHealth(float amount)
     {
-        GameObject obj = Instantiate(Foodaud);
+        GameObject obj = Instantiate(foodAudio);
         Destroy(obj, 1);
         float futureHealth = this.currentHealth + amount;
         if (futureHealth >= MAX_HEALTH)
@@ -103,9 +103,9 @@ public class PlayerAction : MonoBehaviour
 
         this.currentHealth = futureHealth;
         this.healthBar.SetHealth(this.currentHealth);
-        if (!damage_aud.isPlaying)
+        if (!damageAudio.isPlaying)
         {
-            damage_aud.Play();
+            damageAudio.Play();
         }
     }
 
